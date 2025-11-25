@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>프로필 수정</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>프로필 수정</h1>
+
+    <nav>
+      <div>
+        <a href="/gauje/free">자유 게시판</a>
+        <a href="/gauje/notice">공지사항</a>
+      </div>
+
+      <div class="nav-right">
+        <% if (currentUser) { %>
+          <span>현재 이름: <strong><%= currentUser.displayName %></strong></span>
+          <form method="post" action="/auth/logout">
+            <button type="submit">로그아웃</button>
+          </form>
+        <% } %>
+      </div>
+    </nav>
+
+    <p>현재 이름: <strong><%= user.displayName %></strong></p>
+
+    <form method="post" action="/auth/profile">
+      <p>
+        <label>새 이름
+          <input type="text" name="display_name" value="<%= user.displayName %>" required>
+        </label>
+      </p>
+      <p>
+        <button type="submit">수정하기</button>
+        <a href="/gauje/free">돌아가기</a>
+      </p>
+    </form>
+  </div>
+</body>
+</html>

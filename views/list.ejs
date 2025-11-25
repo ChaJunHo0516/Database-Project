@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title><%= boardTitle %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1><%= boardTitle %></h1>
+
+    <nav>
+      <div>
+        <a href="/gauje/free">자유 게시판</a>
+        <a href="/gauje/notice">공지사항</a>
+        <a href="/gauje/<%= boardType %>/new" class="btn">새 글 쓰기</a>
+      </div>
+
+      <div class="nav-right">
+        <% if (currentUser) { %>
+          <span>현재 이름: <strong><%= currentUser.displayName %></strong></span>
+          <a href="/auth/profile">프로필 수정</a>
+          <form method="post" action="/auth/logout">
+            <button type="submit">로그아웃</button>
+          </form>
+        <% } else { %>
+          <a href="/auth/login">로그인</a>
+          <a href="/auth/register">회원가입</a>
+        <% } %>
+      </div>
+    </nav>
+
+    <form method="get" action="/gauje/<%= boardType %>" class="search-box">
+      <input type="text" name="q" value="<%= q %>" placeholder="제목 검색">
+      <button type="submit">검색</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 60px;">번호</th>
+          <th>제목</th>
+          <th style="width: 120px;">작성자</th>
+          <th style="width: 80px;">조회수</th>
+          <th style="width: 120px;">작성일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (posts.length === 0) { %>
+          <tr>
+            <td colspan="5">게시글이 없습니다.</td>
+          </tr>
+        <% } %>
+
+        <% posts.forEach(function(post, index) { %>
+          <tr>
+            <td><%= startNumber - index %></td>
+            <td>
+              <a href="/gauje/<%= boardType %>/<%= post.id %>">
+                <%= post.title %>
+              </a>
+            </td>
+            <td><%= post.writer %></td>
+            <td><%= post.views %></td>
+            <td><%= post.created_at.toISOString().slice(0, 10) %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% for (let p = 1; p <= totalPages; p++) { %>
+        <% if (p === page) { %>
+          <strong><%= p %></strong>
+        <% } else { %>
+          <a href="/gauje/<%= boardType %>?page=<%= p %><% if (q) { %>&q=<%= q %><% } %>">
+            <%= p %>
+          </a>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>

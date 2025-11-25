@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title><%= boardTitle %> - <%= action === 'create' ? '글쓰기' : '수정' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1><%= boardTitle %></h1>
+
+    <nav>
+      <div>
+        <a href="/gauje/free">자유 게시판</a>
+        <a href="/gauje/notice">공지사항</a>
+      </div>
+
+      <div class="nav-right">
+        <% if (currentUser) { %>
+          <span>현재 이름: <strong><%= currentUser.displayName %></strong></span>
+          <a href="/auth/profile">프로필 수정</a>
+          <form method="post" action="/auth/logout">
+            <button type="submit">로그아웃</button>
+          </form>
+        <% } else { %>
+          <a href="/auth/login">로그인</a>
+          <a href="/auth/register">회원가입</a>
+        <% } %>
+      </div>
+    </nav>
+
+    <h2><%= action === 'create' ? '새 글 쓰기' : '글 수정' %></h2>
+
+    <% if (currentUser) { %>
+      <p>작성자 : <strong><%= currentUser.displayName %></strong></p>
+    <% } %>
+
+    <form method="post"
+          action="<%=
+            action === 'create'
+              ? '/gauje/' + boardType
+              : '/gauje/' + boardType + '/' + post.id + '/edit'
+          %>">
+
+      <p>
+        <label>제목
+          <input type="text" name="title"
+                 value="<%= post ? post.title : '' %>" required>
+        </label>
+      </p>
+
+      <p>
+        <label>내용</label><br>
+        <textarea name="content" rows="10" required><%= post ? post.content : '' %></textarea>
+      </p>
+
+      <p>
+        <button type="submit"><%= action === 'create' ? '등록' : '수정 완료' %></button>
+        <a href="/gauje/<%= boardType %>" class="btn">취소</a>
+      </p>
+    </form>
+  </div>
+</body>
+</html>
